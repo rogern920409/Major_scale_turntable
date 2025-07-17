@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=0">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" id="viewport" name="viewport">
+    <title>一生弦命_轉盤</title>
+    <script src="tonal.min.js"></script>
+    <style>
+        /* 預設選項 */
+        html {
+            touch-action: manipulation;
+        }
+        body {
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        .circle_1 {
+            border: 3px solid black;
+            border-radius: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.5s ease;
+        }
+        .circle_2 {
+            border: 3px solid black;
+            border-radius: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .center_circle {
+            border: 3px solid black;
+            border-radius: 50%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .line_out {
+            width: 3px;
+            background-color: black;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .line_in {
+            width: 3px;
+            background-color: black;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .text {
+            position: absolute;
+            text-align: center;
+            color: black;
+            top: 50%;
+            left: 50%;
+            transform-origin: 50% 50%;
+            user-select: none;
+        }
+        .text-box {
+            width: 5vw;
+            height: 5vw;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            user-select: none;
+        }
+        .left_rotate_button {
+            font-family: 'Times New Roman', Times, serif;
+            width:  10vh;
+            height: 10vh;
+            border-radius: 0%;
+            position: fixed;
+            top: 90%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            font-size: 5vh;
+            text-align: center;
+        }
+        .right_rotate_button {
+            font-family: 'Times New Roman', Times, serif;
+            width:  10vh;
+            height: 10vh;
+            border-radius: 0%;
+            position: fixed;
+            top: 90%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            font-size: 5vh;
+            text-align: center;
+        }
+        .chordField {
+            font-family: Arial, Helvetica, sans-serif;
+            position: relative;
+            text-align: center;
+        }
+        #chordOutput {
+            font-family: Arial, Helvetica, sans-serif;
+            position: relative;
+            text-align: center;
+        }
+        .aboutThisWeb {
+            font-family: Arial, Helvetica, sans-serif;
+            position: relative;
+            text-align: center;
+            white-space: nowrap;
+        }
+        /* 手機畫面選項 */
+        @media only screen and (max-width: 767px) {
+            .circle_1 {
+                width:  70vw;
+                height: 70vw;
+            }
+            .circle_2 {
+                width:  42vw;
+                height: 42vw;
+            }
+            .center_circle {
+                width:  42vw;
+                height: 42vw;
+            }
+            .text {
+                font-size: 4vw;
+            }
+            .text-box {
+                width: 5vw;
+                height: 5vw;
+                font-size: 4vw;
+            }
+            .line_out {
+                height: 5vw;
+            }
+            .line_in {
+                height: 5vw;
+            }
+            .chordField {
+                font-size: 5vw;
+            }
+            #chordOutput {
+                font-size: 5vw;
+            }
+            .aboutThisWeb {
+                font-size: 5vw;
+            }
+            .line_out:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg  )  translateY(35.5vw);}
+            .line_out:nth-child(2) { transform: translate(-50%, -50%) rotate(30deg )  translateY(35.5vw);}
+            .line_out:nth-child(3) { transform: translate(-50%, -50%) rotate(60deg )  translateY(35.5vw);}
+            .line_out:nth-child(4) { transform: translate(-50%, -50%) rotate(90deg )  translateY(35.5vw);}
+            .line_out:nth-child(5) { transform: translate(-50%, -50%) rotate(120deg)  translateY(35.5vw);}
+            .line_out:nth-child(6) { transform: translate(-50%, -50%) rotate(150deg)  translateY(35.5vw);}
+            .line_out:nth-child(7) { transform: translate(-50%, -50%) rotate(180deg)  translateY(35.5vw);}
+            .line_out:nth-child(8) { transform: translate(-50%, -50%) rotate(210deg)  translateY(35.5vw);}
+            .line_out:nth-child(9) { transform: translate(-50%, -50%) rotate(240deg)  translateY(35.5vw);}
+            .line_out:nth-child(10) { transform: translate(-50%, -50%) rotate(270deg) translateY(35.5vw);}
+            .line_out:nth-child(11) { transform: translate(-50%, -50%) rotate(300deg) translateY(35.5vw);}
+            .line_out:nth-child(12) { transform: translate(-50%, -50%) rotate(330deg) translateY(35.5vw);}
+
+            .line_in:nth-child(3) { transform: translate(-50%, -50%) rotate(0deg  )  translateY(21vw);}
+            .line_in:nth-child(4) { transform: translate(-50%, -50%) rotate(30deg )  translateY(21vw);}
+            .line_in:nth-child(5) { transform: translate(-50%, -50%) rotate(60deg )  translateY(21vw);}
+            .line_in:nth-child(6) { transform: translate(-50%, -50%) rotate(90deg )  translateY(21vw);}
+            .line_in:nth-child(7) { transform: translate(-50%, -50%) rotate(120deg)  translateY(21vw);}
+            .line_in:nth-child(8) { transform: translate(-50%, -50%) rotate(150deg)  translateY(21vw);}
+            .line_in:nth-child(9) { transform: translate(-50%, -50%) rotate(180deg)  translateY(21vw);}
+            .line_in:nth-child(10) { transform: translate(-50%, -50%) rotate(210deg) translateY(21vw);}
+            .line_in:nth-child(11) { transform: translate(-50%, -50%) rotate(240deg) translateY(21vw);}
+            .line_in:nth-child(12) { transform: translate(-50%, -50%) rotate(270deg) translateY(21vw);}
+            .line_in:nth-child(13) { transform: translate(-50%, -50%) rotate(300deg) translateY(21vw);}
+            .line_in:nth-child(14) { transform: translate(-50%, -50%) rotate(330deg) translateY(21vw);}
+
+            .text:nth-child(15)  { transform: translate(-50%, -50%) rotate(0deg  ) translateY(-27vw);}
+            .text:nth-child(16)  { transform: translate(-50%, -50%) rotate(30deg ) translateY(-27vw) rotate(-30deg);}
+            .text:nth-child(17)  { transform: translate(-50%, -50%) rotate(60deg ) translateY(-27vw) rotate(-60deg);}
+            .text:nth-child(18)  { transform: translate(-50%, -50%) rotate(90deg ) translateY(-27vw) rotate(-90deg);}
+            .text:nth-child(19)  { transform: translate(-50%, -50%) rotate(120deg) translateY(-27vw) rotate(-120deg);}
+            .text:nth-child(20)  { transform: translate(-50%, -50%) rotate(150deg) translateY(-27vw) rotate(-150deg);}
+            .text:nth-child(21)  { transform: translate(-50%, -50%) rotate(180deg) translateY(-27vw) rotate(-180deg);}
+            .text:nth-child(22)  { transform: translate(-50%, -50%) rotate(210deg) translateY(-27vw) rotate(-210deg);}
+            .text:nth-child(23)  { transform: translate(-50%, -50%) rotate(240deg) translateY(-27vw) rotate(-240deg);}
+            .text:nth-child(24)  { transform: translate(-50%, -50%) rotate(270deg) translateY(-27vw) rotate(-270deg);}
+            .text:nth-child(25)  { transform: translate(-50%, -50%) rotate(300deg) translateY(-27vw) rotate(-300deg);}
+            .text:nth-child(26)  { transform: translate(-50%, -50%) rotate(330deg) translateY(-27vw) rotate(-330deg);}
+            .text:nth-child(27)  { transform: translate(-50%, -50%) rotate(30deg ) translateY(-14.5vw) rotate(-30deg);}
+            .text:nth-child(28)  { transform: translate(-50%, -50%) rotate(90deg ) translateY(-14.5vw) rotate(-90deg);}
+            .text:nth-child(29)  { transform: translate(-50%, -50%) rotate(180deg) translateY(-14.5vw) rotate(-180deg);}
+            .text:nth-child(30)  { transform: translate(-50%, -50%) rotate(240deg) translateY(-14.5vw) rotate(-240deg);}
+            .text:nth-child(31)  { transform: translate(-50%, -50%) rotate(300deg) translateY(-14.5vw) rotate(-300deg);}
+
+            .text-box:nth-child(13) { transform: translate(-50%, -50%) rotate(0deg  ) translateY(-41vw);}
+            .text-box:nth-child(14) { transform: translate(-50%, -50%) rotate(60deg ) translateY(-41vw);}
+            .text-box:nth-child(15) { transform: translate(-50%, -50%) rotate(120deg) translateY(-41vw);}
+            .text-box:nth-child(16) { transform: translate(-50%, -50%) rotate(150deg) translateY(-41vw);}
+            .text-box:nth-child(17) { transform: translate(-50%, -50%) rotate(210deg) translateY(-41vw);}
+            .text-box:nth-child(18) { transform: translate(-50%, -50%) rotate(270deg) translateY(-41vw);}
+            .text-box:nth-child(19) { transform: translate(-50%, -50%) rotate(330deg) translateY(-41vw);}
+        }
+        /* 電腦畫面選項 */
+        @media only screen and (min-width: 768px) {
+            .circle_1 {
+                width:  50vh;
+                height: 50vh;
+            }
+            .circle_2 {
+                width:  27vh;
+                height: 27vh;
+            }
+            .center_circle {
+                width:  42vh;
+                height: 42vh;
+            }
+            .text {
+                font-size: 3vh;
+            }
+            .text-box {
+                width: 5vh;
+                height: 5vh;
+                font-size: 3vh;
+            }
+            .line_out {
+                height: 5vh;
+            }
+            .line_in {
+                height: 5vh;
+            }
+            .chordField {
+                font-size: 3vh;
+            }
+            #chordOutput {
+                font-size: 3vh;
+            }
+            .aboutThisWeb {
+                font-size: 3vh;
+            }
+            .line_out:nth-child(2) { transform: translate(-50%, -50%) rotate(30deg )  translateY(25.5vh);}
+            .line_out:nth-child(3) { transform: translate(-50%, -50%) rotate(60deg )  translateY(25.5vh);}
+            .line_out:nth-child(4) { transform: translate(-50%, -50%) rotate(90deg )  translateY(25.5vh);}
+            .line_out:nth-child(1) { transform: translate(-50%, -50%) rotate(0deg  )  translateY(25.5vh);}
+            .line_out:nth-child(5) { transform: translate(-50%, -50%) rotate(120deg)  translateY(25.5vh);}
+            .line_out:nth-child(6) { transform: translate(-50%, -50%) rotate(150deg)  translateY(25.5vh);}
+            .line_out:nth-child(7) { transform: translate(-50%, -50%) rotate(180deg)  translateY(25.5vh);}
+            .line_out:nth-child(8) { transform: translate(-50%, -50%) rotate(210deg)  translateY(25.5vh);}
+            .line_out:nth-child(9) { transform: translate(-50%, -50%) rotate(240deg)  translateY(25.5vh);}
+            .line_out:nth-child(10) { transform: translate(-50%, -50%) rotate(270deg) translateY(25.5vh);}
+            .line_out:nth-child(11) { transform: translate(-50%, -50%) rotate(300deg) translateY(25.5vh);}
+            .line_out:nth-child(12) { transform: translate(-50%, -50%) rotate(330deg) translateY(25.5vh);}
+
+            .line_in:nth-child(3) { transform: translate(-50%, -50%) rotate(0deg  )  translateY(14vh);}
+            .line_in:nth-child(4) { transform: translate(-50%, -50%) rotate(30deg )  translateY(14vh);}
+            .line_in:nth-child(5) { transform: translate(-50%, -50%) rotate(60deg )  translateY(14vh);}
+            .line_in:nth-child(6) { transform: translate(-50%, -50%) rotate(90deg )  translateY(14vh);}
+            .line_in:nth-child(7) { transform: translate(-50%, -50%) rotate(120deg)  translateY(14vh);}
+            .line_in:nth-child(8) { transform: translate(-50%, -50%) rotate(150deg)  translateY(14vh);}
+            .line_in:nth-child(9) { transform: translate(-50%, -50%) rotate(180deg)  translateY(14vh);}
+            .line_in:nth-child(10) { transform: translate(-50%, -50%) rotate(210deg) translateY(14vh);}
+            .line_in:nth-child(11) { transform: translate(-50%, -50%) rotate(240deg) translateY(14vh);}
+            .line_in:nth-child(12) { transform: translate(-50%, -50%) rotate(270deg) translateY(14vh);}
+            .line_in:nth-child(13) { transform: translate(-50%, -50%) rotate(300deg) translateY(14vh);}
+            .line_in:nth-child(14) { transform: translate(-50%, -50%) rotate(330deg) translateY(14vh);}
+
+            .text:nth-child(15)  { transform: translate(-50%, -50%) rotate(0deg  ) translateY(-19vh);}
+            .text:nth-child(16)  { transform: translate(-50%, -50%) rotate(30deg ) translateY(-19vh) rotate(-30deg);}
+            .text:nth-child(17)  { transform: translate(-50%, -50%) rotate(60deg ) translateY(-19vh) rotate(-60deg);}
+            .text:nth-child(18)  { transform: translate(-50%, -50%) rotate(90deg ) translateY(-19vh) rotate(-90deg);}
+            .text:nth-child(19)  { transform: translate(-50%, -50%) rotate(120deg) translateY(-19vh) rotate(-120deg);}
+            .text:nth-child(20)  { transform: translate(-50%, -50%) rotate(150deg) translateY(-19vh) rotate(-150deg);}
+            .text:nth-child(21)  { transform: translate(-50%, -50%) rotate(180deg) translateY(-19vh) rotate(-180deg);}
+            .text:nth-child(22)  { transform: translate(-50%, -50%) rotate(210deg) translateY(-19vh) rotate(-210deg);}
+            .text:nth-child(23)  { transform: translate(-50%, -50%) rotate(240deg) translateY(-19vh) rotate(-240deg);}
+            .text:nth-child(24)  { transform: translate(-50%, -50%) rotate(270deg) translateY(-19vh) rotate(-270deg);}
+            .text:nth-child(25)  { transform: translate(-50%, -50%) rotate(300deg) translateY(-19vh) rotate(-300deg);}
+            .text:nth-child(26)  { transform: translate(-50%, -50%) rotate(330deg) translateY(-19vh) rotate(-330deg);}
+            .text:nth-child(27)  { transform: translate(-50%, -50%) rotate(30deg ) translateY(-8.5vh) rotate(-30deg);}
+            .text:nth-child(28)  { transform: translate(-50%, -50%) rotate(90deg ) translateY(-8.5vh) rotate(-90deg);}
+            .text:nth-child(29)  { transform: translate(-50%, -50%) rotate(180deg) translateY(-8.5vh) rotate(-180deg);}
+            .text:nth-child(30)  { transform: translate(-50%, -50%) rotate(240deg) translateY(-8.5vh) rotate(-240deg);}
+            .text:nth-child(31)  { transform: translate(-50%, -50%) rotate(300deg) translateY(-8.5vh) rotate(-300deg);}
+
+            .text-box:nth-child(13) { transform: translate(-50%, -50%) rotate(0deg  ) translateY(-30vh);}
+            .text-box:nth-child(14) { transform: translate(-50%, -50%) rotate(60deg ) translateY(-30vh);}
+            .text-box:nth-child(15) { transform: translate(-50%, -50%) rotate(120deg) translateY(-30vh);}
+            .text-box:nth-child(16) { transform: translate(-50%, -50%) rotate(150deg) translateY(-30vh);}
+            .text-box:nth-child(17) { transform: translate(-50%, -50%) rotate(210deg) translateY(-30vh);}
+            .text-box:nth-child(18) { transform: translate(-50%, -50%) rotate(270deg) translateY(-30vh);}
+            .text-box:nth-child(19) { transform: translate(-50%, -50%) rotate(330deg) translateY(-30vh);}
+        }
+    </style>
+</head>
+    <body>
+        <div class="circle_1" id="rotatableContainer">
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+            <div class="line_out"></div>
+
+            <div class="text-box">1</div>
+            <div class="text-box">2</div>
+            <div class="text-box">3</div>
+            <div class="text-box">4</div>
+            <div class="text-box">5</div>
+            <div class="text-box">6</div>
+            <div class="text-box">7</div>
+        </div>
+
+        <div class="circle_2"></div>
+
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+        <div class="line_in"></div>
+
+        <div class="text">C</div>
+        <div class="text">C#</div>
+        <div class="text">D</div>
+        <div class="text">D#</div>
+        <div class="text">E</div>
+        <div class="text">F</div>
+        <div class="text">F#</div>
+        <div class="text">G</div>
+        <div class="text">G#</div>
+        <div class="text">A</div>
+        <div class="text">A#</div>
+        <div class="text">B</div>
+
+        <div class="text">Db</div>
+        <div class="text">Eb</div>
+        <div class="text">Gb</div>
+        <div class="text">Ab</div>
+        <div class="text">Bb</div>
+
+        <button onclick="rotateLeft()" class="left_rotate_button"><</button>
+        <button onclick="rotateRight()" class="right_rotate_button">></button>
+
+        <p class="aboutThisWeb">大調音階&音程關係轉盤小工具</p>
+
+        <div class="chordField">
+            <input type="text" id="inputField" oninput="updateChord(this.value)" placeholder="輸入和弦">
+        </div>
+
+        <div id="chordOutput"></div>
+
+        <script>
+            const rotatableContainer = document.getElementById('rotatableContainer');
+            let isDragging = false;
+            let initialRotation, startAngle;
+
+            var rotationDegree = 0;
+            var rotate_circle = document.getElementById('rotatableContainer');
+
+            function rotateLeft() {
+                rotationDegree -= 30;
+                rotate_circle.style.transform = 'translate(-50%, -50%) rotate(' + rotationDegree + 'deg)';
+            }
+
+            function rotateRight() {
+                rotationDegree += 30;
+                rotate_circle.style.transform = 'translate(-50%, -50%) rotate(' + rotationDegree + 'deg)';
+            }
+            // 來自NiceChord的程式碼
+            function updateChord(value) {
+        		const valueCleaned = value.replace(/[(),\s]/g, "");
+            const result = Tonal.Chord.get(valueCleaned);
+            const resultWithOctave = Tonal.Chord.getChord(result.aliases[0], result.tonic+"4");
+            if (result.notes.join(' ') != "") {
+            		const notes = result.notes.join(' ');
+                document.getElementById('chordOutput').textContent = result.symbol + " 和弦的組成音是 " + notes;								let abcNoteArray = resultWithOctave.notes.map(item => {
+
+                    // Replace '#' with '^' and 'b' with '_'
+                    let replaced = item.replace(/#/g, '^').replace(/b/g, '_');
+
+
+                    // Check if item contains '5' or '6', if so, convert to lowercase
+								    if (replaced.includes('5') || replaced.includes('6')) {
+								        replaced = replaced.toLowerCase();
+								    }
+								                    
+                    // Move the first character to the end
+                    let rearranged = replaced.substring(1) + replaced.charAt(0);
+
+
+                    // Check if item contains '6', if so, add a "'" at the end
+									  if (rearranged.includes('6')) {
+									      rearranged = rearranged + "'";
+									  }  
+
+							      // Remove all numbers
+								    rearranged = rearranged.replace(/\d/g, '');		
+                
+                    return rearranged;
+                });
+                
+                const abcSyntax = "[" + abcNoteArray.join('8') + "8]"
+            }
+        }
+
+        </script>
+    </body>
+</html>
